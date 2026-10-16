@@ -2,7 +2,7 @@ import { assert } from "chai";
 import { applyLinkTemplate } from "../src/modules/linkTemplate";
 
 const LINK =
-  "zotero://open-pdf/library/items/2CGYVAUZ?page=2&annotation=8KX2M4QP";
+  "zotero://open-pdf/library/items/ABCD1234?page=2&annotation=WXYZ5678";
 
 describe("applyLinkTemplate", function () {
   it("should replace placeholders with their values", function () {

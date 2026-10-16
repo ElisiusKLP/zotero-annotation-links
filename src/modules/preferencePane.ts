@@ -7,6 +7,6 @@ export function registerPreferencePane() {
     pluginID: config.addonID,
     src: `${rootURI}content/preferences.xhtml`,
     label: getString("prefs-title"),
-    image: `chrome://${config.addonRef}/content/icons/favicon.png`,
+    image: `chrome://${config.addonRef}/content/icons/link.svg`,
   });
 }

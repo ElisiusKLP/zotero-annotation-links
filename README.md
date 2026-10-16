@@ -76,7 +76,7 @@ These links are generated automatically — no need to construct them manually.
 To copy links in another format, set a template in **Settings > Annotation Links**. For example, `[Page {page}]({link})` copies a Markdown link ready to paste into Obsidian:
 
 ```
-[Page 2](zotero://open-pdf/library/items/2CGYVAUZ?page=2&annotation=8KX2M4QP)
+[Page 2](zotero://open-pdf/library/items/ABCD1234?page=2&annotation=WXYZ5678)
 ```
 
 See [Link Templates](docs/link-template.md) for all placeholders and examples.

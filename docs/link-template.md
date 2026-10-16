@@ -16,12 +16,12 @@ Placeholders are written in curly braces and replaced with the values of the cop
 
 | Placeholder       | Replaced with                          | Example                                                               |
 | ----------------- | -------------------------------------- | --------------------------------------------------------------------- |
-| `{link}`          | The `zotero://` link to the annotation | `zotero://open-pdf/library/items/2CGYVAUZ?page=2&annotation=8KX2M4QP` |
+| `{link}`          | The `zotero://` link to the annotation | `zotero://open-pdf/library/items/ABCD1234?page=2&annotation=WXYZ5678` |
 | `{page}`          | The annotation's page label            | `2`                                                                   |
-| `{title}`         | The title of the document              | `Distinct prediction errors in mesostriatal circuits`                 |
-| `{text}`          | The highlighted text, on a single line | `the striatum encodes value`                                          |
-| `{annotationKey}` | The annotation's item key              | `8KX2M4QP`                                                            |
-| `{itemKey}`       | The PDF attachment's item key          | `2CGYVAUZ`                                                            |
+| `{title}`         | The title of the document              | `An Example Paper`                                                    |
+| `{text}`          | The highlighted text, on a single line | `an example highlighted sentence`                                     |
+| `{annotationKey}` | The annotation's item key              | `WXYZ5678`                                                            |
+| `{itemKey}`       | The PDF attachment's item key          | `ABCD1234`                                                            |
 
 Placeholders are case-sensitive. Unknown placeholders such as `{foo}` are copied as they are, and a placeholder without a value (e.g. `{text}` for an image annotation) is replaced with nothing.
 
@@ -29,10 +29,10 @@ Placeholders are case-sensitive. Unknown placeholders such as `{foo}` are copied
 
 | Template                         | Copied text                                                                     |
 | -------------------------------- | ------------------------------------------------------------------------------- |
-| `{link}`                         | `zotero://open-pdf/library/items/2CGYVAUZ?page=2&annotation=8KX2M4QP`           |
-| `[Page {page}]({link})`          | `[Page 2](zotero://open-pdf/library/items/2CGYVAUZ?page=2&annotation=8KX2M4QP)` |
-| `[{title}, p. {page}]({link})`   | `[Distinct prediction errors in mesostriatal circuits, p. 2](zotero://...)`     |
-| `> {text} ([p. {page}]({link}))` | `> the striatum encodes value ([p. 2](zotero://...))`                           |
+| `{link}`                         | `zotero://open-pdf/library/items/ABCD1234?page=2&annotation=WXYZ5678`           |
+| `[Page {page}]({link})`          | `[Page 2](zotero://open-pdf/library/items/ABCD1234?page=2&annotation=WXYZ5678)` |
+| `[{title}, p. {page}]({link})`   | `[An Example Paper, p. 2](zotero://...)`                                        |
+| `> {text} ([p. {page}]({link}))` | `> an example highlighted sentence ([p. 2](zotero://...))`                      |
 | `<a href="{link}">p. {page}</a>` | `<a href="zotero://...">p. 2</a>`                                               |
 
 > [!NOTE]

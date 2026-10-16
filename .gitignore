@@ -5,3 +5,5 @@ node_modules/
 CLAUDE.md
 .claude/
 tsconfig.tsbuildinfo
+
+*test_data

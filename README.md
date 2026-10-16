@@ -51,7 +51,10 @@ This works within the same PDF, across different PDFs, and even when opening lin
 
 ### 📦 Installation
 
-1. Download `annotation-links.xpi` from the [latest release](https://github.com/mobench/zotero-annotation-links/releases/latest)
+1. Download `annotation-links.xpi` from the [latest release (original by mpbench)](https://github.com/mobench/zotero-annotation-links/releases/latest)
+
+[Custom annotation link template (extension by ElisiusKLP)](https://github.com/ElisiusKLP/zotero-annotation-links/releases/latest)
+
 2. In Zotero: **Tools > Add-ons > gear icon > Install Add-on from File**
 3. Select the `.xpi` file and enable the plugin
 

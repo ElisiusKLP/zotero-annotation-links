@@ -4,6 +4,23 @@ import { buildAnnotationLinkText } from "../src/modules/linkTemplate";
 
 const TEMPLATE_PREF = `${config.prefsPrefix}.linkTemplate`;
 
+async function createParentItem(authors: string[], date?: string) {
+  const parentItem = new Zotero.Item("journalArticle");
+  parentItem.setField("title", "An Example Paper");
+  parentItem.setCreators(
+    authors.map((lastName) => ({
+      firstName: "Ann",
+      lastName,
+      creatorType: "author",
+    })),
+  );
+  if (date) {
+    parentItem.setField("date", date);
+  }
+  await parentItem.saveTx();
+  return parentItem;
+}
+
 async function createPdfAttachment(parentItem?: Zotero.Item) {
   const attachment = new Zotero.Item("attachment");
   if (parentItem) {
@@ -51,9 +68,10 @@ describe("buildAnnotationLinkText", function () {
   let link: string;
 
   before(async function () {
-    parentItem = new Zotero.Item("journalArticle");
-    parentItem.setField("title", "An Example Paper");
-    await parentItem.saveTx();
+    parentItem = await createParentItem(
+      ["Mark", "Smith", "Jones"],
+      "2000-05-01",
+    );
     attachment = await createPdfAttachment(parentItem);
     annotation = await createAnnotation(
       attachment,
@@ -117,12 +135,80 @@ describe("buildAnnotationLinkText", function () {
     );
   });
 
-  it("should replace all placeholders in one template", function () {
-    setTemplate("[{title}, p. {page}]({link}) {text}");
+  it("should replace {author} with the first creator", function () {
+    setTemplate("{author}");
     assert.equal(
       buildAnnotationLinkText(attachment, annotation.key),
-      `[An Example Paper, p. iv](${link}) an example highlighted sentence`,
+      "Mark et al.",
     );
+  });
+
+  it("should replace {year} with the year of the date", function () {
+    setTemplate("{year}");
+    assert.equal(buildAnnotationLinkText(attachment, annotation.key), "2000");
+  });
+
+  it("should replace {citation} with the author and year", function () {
+    setTemplate("{citation}, p. {page}");
+    assert.equal(
+      buildAnnotationLinkText(attachment, annotation.key),
+      "Mark et al., 2000, p. iv",
+    );
+  });
+
+  it("should replace all placeholders in one template", function () {
+    setTemplate(
+      "[{title}, p. {page}]({link}) {text} ({author}, {year}) {citation}",
+    );
+    assert.equal(
+      buildAnnotationLinkText(attachment, annotation.key),
+      `[An Example Paper, p. iv](${link}) an example highlighted sentence (Mark et al., 2000) Mark et al., 2000`,
+    );
+  });
+
+  it("should name one or two authors in {author}", async function () {
+    const oneAuthorItem = await createParentItem(["Mark"], "2000");
+    const twoAuthorsItem = await createParentItem(["Mark", "Smith"], "2000");
+    setTemplate("{author}");
+    try {
+      for (const [item, expected] of [
+        [oneAuthorItem, "Mark"],
+        [twoAuthorsItem, "Mark and Smith"],
+      ] as const) {
+        const itemAttachment = await createPdfAttachment(item);
+        const itemAnnotation = await createAnnotation(
+          itemAttachment,
+          "highlight",
+          "text",
+        );
+        assert.equal(
+          buildAnnotationLinkText(itemAttachment, itemAnnotation.key),
+          expected,
+        );
+      }
+    } finally {
+      await oneAuthorItem.eraseTx();
+      await twoAuthorsItem.eraseTx();
+    }
+  });
+
+  it("should leave out the year in {citation} for an undated item", async function () {
+    const undatedItem = await createParentItem(["Mark"]);
+    const undatedAttachment = await createPdfAttachment(undatedItem);
+    const undatedAnnotation = await createAnnotation(
+      undatedAttachment,
+      "highlight",
+      "text",
+    );
+    setTemplate("[{citation}] [{year}]");
+    try {
+      assert.equal(
+        buildAnnotationLinkText(undatedAttachment, undatedAnnotation.key),
+        "[Mark] []",
+      );
+    } finally {
+      await undatedItem.eraseTx();
+    }
   });
 
   it("should replace {text} with nothing for an image annotation", async function () {
@@ -134,18 +220,18 @@ describe("buildAnnotationLinkText", function () {
     );
   });
 
-  it("should use the attachment's title for a standalone PDF", async function () {
+  it("should use the attachment's title and no citation for a standalone PDF", async function () {
     const standaloneAttachment = await createPdfAttachment();
     const standaloneAnnotation = await createAnnotation(
       standaloneAttachment,
       "highlight",
       "text",
     );
-    setTemplate("{title}");
+    setTemplate("{title} [{author}] [{year}] [{citation}]");
     try {
       assert.equal(
         buildAnnotationLinkText(standaloneAttachment, standaloneAnnotation.key),
-        "Example Attachment",
+        "Example Attachment [] [] []",
       );
     } finally {
       await standaloneAttachment.eraseTx();

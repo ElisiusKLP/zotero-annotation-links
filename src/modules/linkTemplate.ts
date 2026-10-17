@@ -3,6 +3,11 @@ import { buildAnnotationUrl } from "./urlBuilder";
 
 const DEFAULT_LINK_TEMPLATE = "{link}";
 
+/** 
+ * 
+ * 
+*/
+
 /**
  * Build the text copied to the clipboard for an annotation link.
  * The link is wrapped in the user's link template (Settings > Annotation Links),
@@ -21,13 +26,21 @@ export function buildAnnotationLinkText(
     annotationKey,
   );
 
-  // For attachments, prefer the parent item's title
-  const titleItem = attachment.parentItem || attachment;
+  // For attachments, prefer the parent item's title, creators and date
+  const sourceItem = attachment.parentItem || attachment;
+
+  // Same as Zotero's Creator column: "Mark", "Mark and Smith" or "Mark et al."
+  const author = sourceItem.getField("firstCreator", true) as string;
+  // Dates without a year are stored as "0000"
+  const year = (sourceItem.getField("year") as string).replace(/^0000$/, "");
 
   return applyLinkTemplate(template, {
     link: buildAnnotationUrl(attachment, annotationKey),
     page: (annotationItem && annotationItem.annotationPageLabel) || "",
-    title: titleItem.getDisplayTitle(),
+    title: sourceItem.getDisplayTitle(),
+    author,
+    year,
+    citation: [author, year].filter(Boolean).join(", "),
     // Keep multi-line highlights on one line so the template stays intact
     text: ((annotationItem && annotationItem.annotationText) || "")
       .replace(/\s+/g, " ")

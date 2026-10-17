@@ -1,12 +1,7 @@
 import { getPref } from "../utils/prefs";
 import { buildAnnotationUrl } from "./urlBuilder";
 
-const DEFAULT_LINK_TEMPLATE = "{link}";
-
-/** 
- * 
- * 
-*/
+const DEFAULT_LINK_TEMPLATE = "{link}"; //Defaults to just the link
 
 /**
  * Build the text copied to the clipboard for an annotation link.
@@ -34,6 +29,8 @@ export function buildAnnotationLinkText(
   // Dates without a year are stored as "0000"
   const year = (sourceItem.getField("year") as string).replace(/^0000$/, "");
 
+  // Build the link text by replacing placeholders and building the annotation URL.
+  // see docs/link-template.md for the available placeholders.
   return applyLinkTemplate(template, {
     link: buildAnnotationUrl(attachment, annotationKey),
     page: (annotationItem && annotationItem.annotationPageLabel) || "",

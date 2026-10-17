@@ -157,6 +157,7 @@ export function registerAnnotationHeader() {
   );
 }
 
+//
 function buildZoteroIcon(
   doc: Document,
   links: ZoteroLink[],

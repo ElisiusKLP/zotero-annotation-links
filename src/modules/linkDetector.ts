@@ -10,6 +10,7 @@ export interface ZoteroLink {
   sel?: string;
 }
 
+// Regex that assembles Zotero links from the text
 const ZOTERO_LINK_REGEX =
   /zotero:\/\/(open-pdf|open|select)\/(?:groups\/(\d+)\/|library\/)(items|collections)\/([A-Z0-9]+)(\?[^\s]*)?/gi;
 

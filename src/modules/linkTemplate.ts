@@ -3,6 +3,43 @@ import { buildAnnotationUrl } from "./urlBuilder";
 
 const DEFAULT_LINK_TEMPLATE = "{link}"; //Defaults to just the link
 
+// Numbers of the additional copy options in Settings > Annotation Links
+const EXTRA_COPY_OPTIONS = [2, 3, 4, 5] as const;
+
+export interface CopyLinkOption {
+  label: string;
+  template: string;
+}
+
+/**
+ * The copy options shown when right-clicking an annotation: the main link
+ * template, followed by each additional copy option that has a template.
+ * An additional option without a label is labelled by its number, e.g.
+ * "Annotation Link 2" (the main option is number 1).
+ * @param defaultLabel Label of the main option when no label is set
+ * @param numberedLabel Label of an additional option when no label is set
+ */
+export function getCopyLinkOptions(
+  defaultLabel: string,
+  numberedLabel: (number: number) => string,
+): CopyLinkOption[] {
+  const options = [
+    {
+      label: getPref("linkLabel") || defaultLabel,
+      template: getPref("linkTemplate") || DEFAULT_LINK_TEMPLATE,
+    },
+  ];
+  for (const n of EXTRA_COPY_OPTIONS) {
+    const template = getPref(`linkTemplate${n}`);
+    if (!template.trim()) continue;
+    options.push({
+      label: getPref(`linkLabel${n}`) || numberedLabel(n),
+      template,
+    });
+  }
+  return options;
+}
+
 /**
  * Build the text copied to the clipboard for an annotation link.
  * The link is wrapped in the user's link template (Settings > Annotation Links),
@@ -10,12 +47,13 @@ const DEFAULT_LINK_TEMPLATE = "{link}"; //Defaults to just the link
  * See docs/link-template.md for the available placeholders.
  * @param attachment
  * @param annotationKey
+ * @param template Defaults to the main link template
  */
 export function buildAnnotationLinkText(
   attachment: Zotero.Item,
   annotationKey: string,
+  template = getPref("linkTemplate") || DEFAULT_LINK_TEMPLATE,
 ): string {
-  const template = getPref("linkTemplate") || DEFAULT_LINK_TEMPLATE;
   const annotationItem = Zotero.Items.getByLibraryAndKey(
     attachment.libraryID,
     annotationKey,

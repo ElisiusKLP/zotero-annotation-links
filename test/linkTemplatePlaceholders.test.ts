@@ -93,6 +93,14 @@ describe("buildAnnotationLinkText", function () {
     assert.equal(buildAnnotationLinkText(attachment, annotation.key), link);
   });
 
+  it("should use the given template instead of the main one", function () {
+    setTemplate("[Page {page}]({link})");
+    assert.equal(
+      buildAnnotationLinkText(attachment, annotation.key, "> {text}"),
+      "> an example highlighted sentence",
+    );
+  });
+
   it("should copy the plain link for an empty template", function () {
     setTemplate("");
     assert.equal(buildAnnotationLinkText(attachment, annotation.key), link);

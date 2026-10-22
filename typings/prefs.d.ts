@@ -8,6 +8,15 @@ declare namespace _ZoteroTypes {
   interface Prefs {
     PluginPrefsMap: {
       "linkTemplate": string;
+      "linkLabel": string;
+      "linkTemplate2": string;
+      "linkLabel2": string;
+      "linkTemplate3": string;
+      "linkLabel3": string;
+      "linkTemplate4": string;
+      "linkLabel4": string;
+      "linkTemplate5": string;
+      "linkLabel5": string;
     };
   }
 }

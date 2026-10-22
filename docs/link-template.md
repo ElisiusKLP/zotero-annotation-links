@@ -10,6 +10,21 @@ By default, **Copy Annotation Link** copies a plain `zotero://` URL. A link temp
 
 Leave the field empty (or set it to `{link}`) to copy the plain URL.
 
+### More Copy Options
+
+To copy the same annotation in more than one format, add up to four more copy options under **More Copy Options** in **Settings > Annotation Links**. Each option with a template is added to the right-click menu below the main option, under its own menu label.
+
+For example, to copy either a citation or a quote for Obsidian:
+
+| Menu label    | Link template                   | Copied text                                                           |
+| ------------- | ------------------------------- | --------------------------------------------------------------------- |
+| Copy Citation | `([{citation}]({link}))`        | `([Mark et al., 2000](zotero://...))`                                 |
+| Copy Quote    | `{text} ([{citation}]({link}))` | `an example highlighted sentence ([Mark et al., 2000](zotero://...))` |
+
+Here the first row is the main option, set with **Link template** and **Menu label** at the top of the settings. An option without a menu label is shown as "Annotation Link" and its number, from "Annotation Link 2" to "Annotation Link 5" (the main option is number 1), and an option without a template is not shown.
+
+`Ctrl+Shift+C` always copies the main option.
+
 ### Placeholders
 
 Placeholders are written in curly braces and replaced with the values of the copied annotation:
